@@ -1,4 +1,4 @@
-package st
+package template
 
 import (
 	. "github.com/smartystreets/goconvey/convey"

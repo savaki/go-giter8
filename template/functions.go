@@ -1,13 +1,13 @@
-package st
+package template
 
 import (
 	"code.google.com/p/go-uuid/uuid"
 	"regexp"
 	"strings"
-	"text/template"
+	text_template "text/template"
 )
 
-var funcMap = template.FuncMap{
+var funcMap = text_template.FuncMap{
 	"upper":           Upper,
 	"uppercase":       Upper,
 	"lower":           Lower,

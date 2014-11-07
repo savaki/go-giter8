@@ -1,10 +1,10 @@
-package st
+package template
 
 import (
 	"bytes"
 	"fmt"
 	"regexp"
-	"text/template"
+	text_template "text/template"
 )
 
 var (
@@ -16,10 +16,10 @@ var (
 )
 
 // converts data on the other end of the reader to a golang template
-func Parse(text []byte) (*template.Template, error) {
+func Parse(text []byte) (*text_template.Template, error) {
 	text = transform(text)
 
-	return template.New("template").Funcs(funcMap).Parse(string(text))
+	return text_template.New("template").Funcs(funcMap).Parse(string(text))
 }
 
 func Render(text []byte, data interface{}) ([]byte, error) {

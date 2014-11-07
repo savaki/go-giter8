@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/codegangsta/cli"
-	"github.com/savaki/go-giter8/st"
+	"github.com/savaki/go-giter8/template"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -41,7 +41,7 @@ func newAction(c *cli.Context) {
 }
 
 func newProject(repo string, fields map[string]string) error {
-	target := st.Normalize(fields["name"])
+	target := template.Normalize(fields["name"])
 	if target == "" {
 		check(errors.New("no name parameter defined"))
 	}
@@ -59,7 +59,7 @@ func newProject(repo string, fields map[string]string) error {
 		}
 
 		relative := path[prefix:] // path is absolute; let's strip off the prefix
-		destBytes, err := st.Render([]byte(target+relative), fields)
+		destBytes, err := template.Render([]byte(target+relative), fields)
 		if err != nil {
 			return err
 		}
@@ -77,7 +77,7 @@ func newProject(repo string, fields map[string]string) error {
 			return err
 		}
 
-		output, err := st.Render(data, fields)
+		output, err := template.Render(data, fields)
 		if err != nil {
 			return err
 		}
