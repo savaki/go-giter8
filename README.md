@@ -41,13 +41,13 @@ $ g8 new loyal3/service-template-finatra
 The ```.g8``` suffix is assumed.  You can also specify a full repository name:
 
 ```
-$ g8 git@github.com:loyal3/service-template-finatra.g8.gi
+$ g8 git@github.com:loyal3/service-template-finatra.g8.git
 ```
 
 or
 
 ```
-$ g8 https://github.com/loyal3/service-template-finatra.g8.gi
+$ g8 https://github.com/loyal3/service-template-finatra.g8.git
 ```
 
 g8 uses your git binary underneath the hood so any settings you've applied to git will also be picked up by g8.
