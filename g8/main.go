@@ -35,7 +35,7 @@ func exists(path string) bool {
 }
 
 // ExportRepo(git, loyal3/service-template-finatra.g8) => nil
-func ExportRepo(gitpath, repo string) error {
+func exportRepo(gitpath, repo string) error {
 	if exists(Path(repo)) {
 		return nil
 	}
@@ -52,7 +52,7 @@ func Path(dirs ...string) string {
 	return fmt.Sprintf("%s/.go-giter8/%s", os.Getenv("HOME"), subdir)
 }
 
-func ReadFields(repo string) (map[string]string, error) {
+func readFields(repo string) (map[string]string, error) {
 	// assume giter8 format
 	path := Path(repo, "src/main/g8/default.properties")
 	p, err := properties.LoadFile(path, properties.UTF8)

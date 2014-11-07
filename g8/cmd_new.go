@@ -28,19 +28,19 @@ func newAction(c *cli.Context) {
 	}
 
 	// extract the repo
-	err := ExportRepo(opts.Git, opts.Repo)
+	err := exportRepo(opts.Git, opts.Repo)
 	check(err)
 
 	// prompt the user to override the default properties
-	fields, err := ReadFields(opts.Repo)
+	fields, err := readFields(opts.Repo)
 	check(err)
 
 	// render the contents
-	err = createProject(opts.Repo, fields)
+	err = newProject(opts.Repo, fields)
 	check(err)
 }
 
-func createProject(repo string, fields map[string]string) error {
+func newProject(repo string, fields map[string]string) error {
 	target := st.Normalize(fields["name"])
 	if target == "" {
 		check(errors.New("no name parameter defined"))
