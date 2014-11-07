@@ -21,7 +21,7 @@ var funcMap = template.FuncMap{
 	"capitalize":      Capitalize,
 	"hyphen":          Hyphenate,
 	"hyphenate":       Hyphenate,
-	"normlize":        Normalize,
+	"normalize":       Normalize,
 	"norm":            Normalize,
 	"snake":           Snake,
 	"snake-case":      Snake,
