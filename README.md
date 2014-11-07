@@ -1,4 +1,4 @@
-go-giter8
+go.giter8
 =========
 
-a simplified golang port of giter8
+golang implementation of giter8
