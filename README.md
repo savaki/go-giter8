@@ -51,3 +51,27 @@ $ g8 https://github.com/loyal3/service-template-finatra.g8.git
 ```
 
 g8 uses your git binary underneath the hood so any settings you've applied to git will also be picked up by g8.
+
+# Formatting Template Fields
+
+go-giter8 has built-in support for formatting template fields. Formatting options can be added when referencing fields. For example, the name field can be formatted in upper camel case with:
+
+```
+$name;format="Camel"$
+```
+
+The formatting options are:
+
+    upper    | uppercase       : all uppercase letters
+    lower    | lowercase       : all lowercase letters
+    cap      | capitalize      : uppercase first letter
+    decap    | decapitalize    : lowercase first letter
+    start    | start-case      : uppercase the first letter of each word
+    word     | word-only       : remove all non-word letters (only a-zA-Z0-9_)
+    Camel    | upper-camel     : upper camel case (start-case, word-only)
+    camel    | lower-camel     : lower camel case (start-case, word-only, decapitalize)
+    hyphen   | hyphenate       : replace spaces with hyphens
+    norm     | normalize       : all lowercase with hyphens (lowercase, hyphenate)
+    snake    | snake-case      : replace spaces and dots with underscores
+    packaged | package-dir     : replace dots with slashes (net.databinder -> net/databinder)
+    random   | generate-random : appends random characters to the given string
