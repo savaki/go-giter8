@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestCap(t *testing.T) {
+func TestCapitalize(t *testing.T) {
 	Convey("When I #Capitalize a string", t, func() {
 		result := Capitalize("hello")
 
@@ -23,10 +23,52 @@ func TestCap(t *testing.T) {
 	})
 }
 
+func TestDecapitalize(t *testing.T) {
+	Convey("When I #Decapitalize a string", t, func() {
+		result := Decapitalize("HELLO")
+
+		Convey("Then only the first letter is de-capitalized", func() {
+			So(result, ShouldEqual, "hELLO")
+		})
+	})
+
+	Convey("I can #Decapitalize a zero lengthed string", t, func() {
+		So(Decapitalize(""), ShouldEqual, "")
+	})
+
+	Convey("I can #Capitalize a string of length 1", t, func() {
+		So(Decapitalize("H"), ShouldEqual, "h")
+	})
+}
+
+func TestPackaged(t *testing.T) {
+	Convey("#Packaged replaces dots with slashes", t, func() {
+		So(Packaged("com.loyal3.foo"), ShouldEqual, "com/loyal3/foo")
+	})
+}
+
 func TestRandom(t *testing.T) {
 	Convey("When I #Random a string", t, func() {
 		result := Random("hello")
 		So(len(result), ShouldBeGreaterThan, len("hello"))
+	})
+}
+
+func TestUpper(t *testing.T) {
+	Convey("When I #Upper a string", t, func() {
+		result := Upper("hello world")
+		Convey("Then I expect all upper cases", func() {
+			So(result, ShouldEqual, "HELLO WORLD")
+		})
+	})
+}
+
+func TestLower(t *testing.T) {
+	Convey("When I #Lower a string", t, func() {
+		result := Lower("Hello WORLD")
+		Convey("Then I expect all lower cases", func() {
+			So(result, ShouldEqual, "hello world")
+		})
 	})
 }
 

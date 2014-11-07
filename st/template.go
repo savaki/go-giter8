@@ -17,10 +17,7 @@ var (
 
 // converts data on the other end of the reader to a golang template
 func Parse(text []byte) (*template.Template, error) {
-	text, err := transform(text)
-	if err != nil {
-		return nil, err
-	}
+	text = transform(text)
 
 	return template.New("template").Funcs(funcMap).Parse(string(text))
 }
@@ -41,20 +38,22 @@ func Render(text []byte, data interface{}) ([]byte, error) {
 }
 
 // transform templates in the short format to go templates e.g. name__filter1__filter2
-func transformShort(text []byte) ([]byte, error) {
-	matches := shortFormat.FindAllSubmatch(text, -1)
+func transformShort(text []byte) []byte {
+	results := text
+	matches := shortFormat.FindAllSubmatch(results, -1)
 	for _, match := range matches {
 		segments := bytes.Split(match[1], []byte("__"))
 		macro := fmt.Sprintf("{{ .%s }}", bytes.Join(segments, []byte(" | ")))
-		text = bytes.Replace(text, match[0], []byte(macro), -1)
+		results = bytes.Replace(results, match[0], []byte(macro), -1)
 	}
 
-	return text, nil
+	return results
 }
 
 // transform templates in the long format to go templates e.g. name;filter="lower,snake"
-func transformLong(text []byte) ([]byte, error) {
-	matches := longFormat.FindAllSubmatch(text, -1)
+func transformLong(text []byte) []byte {
+	results := text
+	matches := longFormat.FindAllSubmatch(results, -1)
 	for _, match := range matches {
 		field := match[2]
 		filters := match[3]
@@ -63,23 +62,15 @@ func transformLong(text []byte) ([]byte, error) {
 		segments = append(segments, bytes.Split(filters, []byte(","))...)
 
 		macro := fmt.Sprintf("{{ .%s }}", bytes.Join(segments, []byte(" | ")))
-		text = bytes.Replace(text, match[0], []byte(macro), -1)
+		results = bytes.Replace(results, match[0], []byte(macro), -1)
 	}
 
-	return text, nil
+	return results
 }
 
 // helper to combine both short and long transforms
-func transform(text []byte) ([]byte, error) {
-	text, err := transformShort(text)
-	if err != nil {
-		return nil, err
-	}
-
-	text, err = transformLong(text)
-	if err != nil {
-		return nil, err
-	}
-
-	return text, nil
+func transform(text []byte) []byte {
+	text = transformShort(text)
+	text = transformLong(text)
+	return text
 }
