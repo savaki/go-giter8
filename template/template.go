@@ -70,6 +70,7 @@ func transformLong(text []byte) []byte {
 
 // helper to combine both short and long transforms
 func transform(text []byte) []byte {
+	text = giter8ify(text)
 	text = transformShort(text)
 	text = transformLong(text)
 	return text
