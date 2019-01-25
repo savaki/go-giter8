@@ -23,10 +23,11 @@
 package template
 
 import (
-	"code.google.com/p/go-uuid/uuid"
 	"regexp"
 	"strings"
 	text_template "text/template"
+
+	"github.com/pborman/uuid"
 )
 
 var funcMap = text_template.FuncMap{
