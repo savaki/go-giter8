@@ -37,7 +37,7 @@ var funcMap = text_template.FuncMap{
 	"lowercase":       Lower,
 	"start":           Start,
 	"word":            Word,
-	"word-only":       Word,
+	"word_only":       Word,
 	"camel":           CamelLower,
 	"Camel":           Camel,
 	"cap":             Capitalize,
@@ -47,11 +47,11 @@ var funcMap = text_template.FuncMap{
 	"normalize":       Normalize,
 	"norm":            Normalize,
 	"snake":           Snake,
-	"snake-case":      Snake,
+	"snake_case":      Snake,
 	"packaged":        Packaged,
-	"packaged-case":   Packaged,
+	"packaged_case":   Packaged,
 	"random":          Random,
-	"generate-random": Random,
+	"generate_random": Random,
 }
 
 var (
