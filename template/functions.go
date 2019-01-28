@@ -23,38 +23,38 @@
 package template
 
 import (
-	"code.google.com/p/go-uuid/uuid"
 	"regexp"
 	"strings"
 	text_template "text/template"
+
+	"github.com/pborman/uuid"
 )
 
 var funcMap = text_template.FuncMap{
-	"upper":           Upper,
-	"uppercase":       Upper,
-	"lower":           Lower,
-	"lowercase":       Lower,
-	"start":           Start,
-	"word":            Word,
-	"word-only":       Word,
-	"camel":           CamelLower,
-	"Camel":           Camel,
-	"cap":             Capitalize,
-	"capitalize":      Capitalize,
-	"hyphen":          Hyphenate,
-	"hyphenate":       Hyphenate,
-	"normalize":       Normalize,
-	"norm":            Normalize,
-	"snake":           Snake,
-	"snake-case":      Snake,
-	"packaged":        Packaged,
-	"packaged-case":   Packaged,
-	"random":          Random,
-	"generate-random": Random,
+	"upper":      Upper,
+	"uppercase":  Upper,
+	"lower":      Lower,
+	"lowercase":  Lower,
+	"start":      Start,
+	"word":       Word,
+	"space":      Space,
+	"camel":      CamelLower,
+	"Camel":      Camel,
+	"cap":        Capitalize,
+	"capitalize": Capitalize,
+	"hyphen":     Hyphenate,
+	"hyphenate":  Hyphenate,
+	"normalize":  Normalize,
+	"norm":       Normalize,
+	"snake":      Snake,
+	"package":    Package,
+	"packaged":   Packaged,
+	"random":     Random,
 }
 
 var (
 	wordRe       = regexp.MustCompile(`\W`)
+	wordUnderRe  = regexp.MustCompile(`[\W_]+`)
 	whitespaceRe = regexp.MustCompile(`\s`)
 	dotRe        = regexp.MustCompile(`\.`)
 	snakeRe      = regexp.MustCompile(`\.|\s`)
@@ -122,6 +122,14 @@ func Normalize(value string) string {
 
 func Hyphenate(value string) string {
 	return whitespaceRe.ReplaceAllString(value, "-")
+}
+
+func Space(value string) string {
+	return wordUnderRe.ReplaceAllString(value, " ")
+}
+
+func Package(value string) string {
+	return whitespaceRe.ReplaceAllString(value, ".")
 }
 
 func Packaged(value string) string {
