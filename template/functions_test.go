@@ -23,8 +23,9 @@
 package template
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestCapitalize(t *testing.T) {
@@ -60,6 +61,18 @@ func TestDecapitalize(t *testing.T) {
 
 	Convey("I can #Capitalize a string of length 1", t, func() {
 		So(Decapitalize("H"), ShouldEqual, "h")
+	})
+}
+
+func TestSpace(t *testing.T) {
+	Convey("#Space replaces non words or underscore with spaces", t, func() {
+		So(Space("com-loyal3_foo"), ShouldEqual, "com loyal3 foo")
+	})
+}
+
+func TestPackage(t *testing.T) {
+	Convey("#Package replaces spaces with dots", t, func() {
+		So(Package("com loyal3 foo"), ShouldEqual, "com.loyal3.foo")
 	})
 }
 
