@@ -8,5 +8,7 @@ github.com/savaki/go-giter8 v0.0.0-20141119011638-1651ec694ecc h1:sEcaMAXYLacLiK
 github.com/savaki/go-giter8 v0.0.0-20141119011638-1651ec694ecc/go.mod h1:l42SBKJ2nBe8n/x4kh/QqqiYNdr/q2xcP0MuVHeKY6U=
 github.com/savaki/properties v0.0.0-20141107153340-7d87a9adc059 h1:KLj5K418bQnuG4QP9/BUBv7XL0BlxGB1nI9aspQOfNw=
 github.com/savaki/properties v0.0.0-20141107153340-7d87a9adc059/go.mod h1:oDX/ZAm38lXr5kfIaGOorkdI9HsYa7/4lnNMzUdMhps=
+github.com/savaki/properties v1.4.0 h1:1fuCeSn/NsvrmmEbdaoTr6D2v7MEH2BdtvlH84HbokI=
+github.com/savaki/properties v1.4.0/go.mod h1:oDX/ZAm38lXr5kfIaGOorkdI9HsYa7/4lnNMzUdMhps=
 github.com/smartystreets/goconvey v0.0.0-20141105001104-5a2cd6136dd3 h1:eVDNqby71dJQVNqQDqsQkxUb7yVJtiF16+C7CHeJZts=
 github.com/smartystreets/goconvey v0.0.0-20141105001104-5a2cd6136dd3/go.mod h1:XDJAKZRPZ1CvBcN2aX5YOUTYGHki24fSF0Iv48Ibg0s=

@@ -26,7 +26,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/codegangsta/cli"
-	"github.com/savaki/go-giter8/template"
+	"github.com/btnguyen2k/go-giter8/template"
 	"io/ioutil"
 	"os"
 	"path/filepath"

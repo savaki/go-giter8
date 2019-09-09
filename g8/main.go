@@ -25,7 +25,7 @@ package main
 import (
 	"fmt"
 	"github.com/codegangsta/cli"
-	"github.com/savaki/go-giter8/git"
+	"github.com/btnguyen2k/go-giter8/git"
 	"github.com/savaki/properties"
 	"log"
 	"os"
