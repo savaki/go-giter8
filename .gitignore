@@ -1,3 +1,7 @@
 # ignore binary
 /g8/g8
+.DS_Store
+/.idea/
+/.vscode/
+/vendor/
 

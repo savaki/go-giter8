@@ -1,0 +1,12 @@
+github.com/codegangsta/cli v0.0.0-20140923033435-f7ebb761e83e h1:6Bx8rcmh1Dx3cEWsj3iJdW5VUtAhIWI/s9LfWB00mIM=
+github.com/codegangsta/cli v0.0.0-20140923033435-f7ebb761e83e/go.mod h1:/qJNoX69yVSKu5o4jLyXAENLRyk1uhi7zkbQ3slBdOA=
+github.com/google/uuid v1.0.0 h1:b4Gk+7WdP/d3HZH8EJsZpvV7EtDOgaZLtnaNGIu1adA=
+github.com/google/uuid v1.0.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/pborman/uuid v1.2.0 h1:J7Q5mO4ysT1dv8hyrUGHb9+ooztCXu1D8MY8DZYsu3g=
+github.com/pborman/uuid v1.2.0/go.mod h1:X/NO0urCmaxf9VXbdlT7C2Yzkj2IKimNn4k+gtPdI/k=
+github.com/savaki/go-giter8 v0.0.0-20141119011638-1651ec694ecc h1:sEcaMAXYLacLiKGq21ZSY5atdwCO1nQbLMmh4a3J1i8=
+github.com/savaki/go-giter8 v0.0.0-20141119011638-1651ec694ecc/go.mod h1:l42SBKJ2nBe8n/x4kh/QqqiYNdr/q2xcP0MuVHeKY6U=
+github.com/savaki/properties v0.0.0-20141107153340-7d87a9adc059 h1:KLj5K418bQnuG4QP9/BUBv7XL0BlxGB1nI9aspQOfNw=
+github.com/savaki/properties v0.0.0-20141107153340-7d87a9adc059/go.mod h1:oDX/ZAm38lXr5kfIaGOorkdI9HsYa7/4lnNMzUdMhps=
+github.com/smartystreets/goconvey v0.0.0-20141105001104-5a2cd6136dd3 h1:eVDNqby71dJQVNqQDqsQkxUb7yVJtiF16+C7CHeJZts=
+github.com/smartystreets/goconvey v0.0.0-20141105001104-5a2cd6136dd3/go.mod h1:XDJAKZRPZ1CvBcN2aX5YOUTYGHki24fSF0Iv48Ibg0s=

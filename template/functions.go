@@ -23,7 +23,7 @@
 package template
 
 import (
-	"code.google.com/p/go-uuid/uuid"
+	"github.com/pborman/uuid"
 	"regexp"
 	"strings"
 	text_template "text/template"
