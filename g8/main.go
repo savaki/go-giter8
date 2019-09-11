@@ -23,107 +23,107 @@
 package main
 
 import (
-	"errors"
-	"fmt"
-	"github.com/btnguyen2k/go-giter8/git"
-	"github.com/codegangsta/cli"
-	"github.com/savaki/properties"
-	"log"
-	"os"
-	"strings"
+    "errors"
+    "fmt"
+    "github.com/btnguyen2k/go-giter8/git"
+    "github.com/savaki/properties"
+    "github.com/urfave/cli"
+    "log"
+    "os"
+    "strings"
 )
 
 const (
-	// Version of giter8
-	Version = "0.2.0"
+    // Version of giter8
+    Version = "0.2.0.1"
 )
 
 func main() {
-	app := cli.NewApp()
-	app.Name = "giter8"
-	app.Usage = "Generate templates from GitHub"
-	app.Version = Version
-	app.Commands = []cli.Command{
-		commandNew,
-	}
-	app.Run(os.Args)
+    app := cli.NewApp()
+    app.Name = "giter8"
+    app.Usage = "Generate templates from GitHub"
+    app.Version = Version
+    app.Commands = []cli.Command{
+        commandNew,
+    }
+    app.Run(os.Args)
 }
 
 func check(err error) {
-	if err != nil {
-		log.Fatalln(err)
-	}
+    if err != nil {
+        log.Fatalln(err)
+    }
 }
 
 // helper to determine if path exists
 func exists(path string) bool {
-	_, err := os.Stat(path)
-	return !os.IsNotExist(err)
+    _, err := os.Stat(path)
+    return !os.IsNotExist(err)
 }
 
 // export a git repo to local directory
 // - gitpath
 // - repo: format <username>/repo-name-ends-with.g8>, example btnguyen2k/microservices-undertow-seed.g8
 func exportRepo(gitpath, repo string) error {
-	dirOut := Path(repo)
-	if exists(Path(repo)) {
-		// output directory exist, clean up for a fresh clone
-		err := os.RemoveAll(dirOut)
-		if err != nil {
-			return err
-		}
-	}
-	tokens := strings.Split(repo, "/")
-	if len(tokens) != 2 || !strings.HasSuffix(tokens[1], ".g8") {
-		return errors.New("repository must be in format <username>/repo-name-ends-with.g8>")
-	}
+    dirOut := Path(repo)
+    if exists(Path(repo)) {
+        // output directory exist, clean up for a fresh clone
+        err := os.RemoveAll(dirOut)
+        if err != nil {
+            return err
+        }
+    }
+    tokens := strings.Split(repo, "/")
+    if len(tokens) != 2 || !strings.HasSuffix(tokens[1], ".g8") {
+        return errors.New("repository must be in format <username>/repo-name-ends-with.g8>")
+    }
 
-	user := tokens[0]
-	client := git.New(gitpath, Path(user))
-	client.Verbose = Verbose
-	return client.Export(repo)
+    user := tokens[0]
+    client := git.New(gitpath, Path(user))
+    client.Verbose = Verbose
+    return client.Export(repo)
 }
 
 // path relative to our temporary storage location
 func Path(dirs ...string) string {
-	subdir := strings.Join(dirs, "/")
-	return fmt.Sprintf("%s/.go-giter8/%s", os.Getenv("HOME"), subdir)
+    subdir := strings.Join(dirs, "/")
+    return fmt.Sprintf("%s/.go-giter8/%s", os.Getenv("HOME"), subdir)
 }
 
 // read fields and values from "default.properties"
 func readFields(repo string) (map[string]string, error) {
-	// assume giter8 format
-	path := Path(repo, "src/main/g8/default.properties")
-	p, err := properties.LoadFile(path, properties.UTF8)
-	if err != nil {
-		return map[string]string{}, nil
-	}
+    // assume giter8 format
+    path := Path(repo, "src/main/g8/default.properties")
+    p, err := properties.LoadFile(path, properties.UTF8)
+    if err != nil {
+        return map[string]string{}, nil
+    }
 
-	// print out template description if exists
-	desc := p.GetString("description", "")
-	if desc != "" {
-		fmt.Println(desc)
-	}
+    // print out template description if exists
+    desc := p.GetString("description", "")
+    if desc != "" {
+        fmt.Println(desc)
+    }
 
-	// ask the user for input on each of the fields
-	fields := map[string]string{}
-	for _, key := range p.Keys() {
-		if key == "" {
-			continue
-		}
-		defaultValue := p.GetString(key, "")
-		var value string
-		if key != "verbatim" && key != "description" {
-			// do not ask for input for "system" fields
-			fmt.Printf("%s [%s]: ", key, defaultValue)
-			fmt.Scanln(&value)
-		}
-		if strings.TrimSpace(value) == "" {
-			fields[key] = defaultValue
-		} else {
-			fields[key] = value
-		}
-	}
+    // ask the user for input on each of the fields
+    fields := map[string]string{}
+    for _, key := range p.Keys() {
+        if key == "" {
+            continue
+        }
+        defaultValue := p.GetString(key, "")
+        var value string
+        if key != "verbatim" && key != "description" {
+            // do not ask for input for "system" fields
+            fmt.Printf("%s [%s]: ", key, defaultValue)
+            fmt.Scanln(&value)
+        }
+        if strings.TrimSpace(value) == "" {
+            fields[key] = defaultValue
+        } else {
+            fields[key] = value
+        }
+    }
 
-	return fields, nil
+    return fields, nil
 }

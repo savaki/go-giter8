@@ -1,5 +1,10 @@
 # go-giter8 release notes
 
+## 2019-09-11 - v0.2.0.1
+
+- Migrate to use package `github.com/urfave/cli`.
+
+
 ## 2019-09-10 - v0.2.0
 
 - Forked from [savaki/go-giter8](https://github.com/savaki/go-giter8).

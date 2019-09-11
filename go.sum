@@ -1,9 +1,14 @@
+github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/codegangsta/cli v0.0.0-20140923033435-f7ebb761e83e h1:6Bx8rcmh1Dx3cEWsj3iJdW5VUtAhIWI/s9LfWB00mIM=
 github.com/codegangsta/cli v0.0.0-20140923033435-f7ebb761e83e/go.mod h1:/qJNoX69yVSKu5o4jLyXAENLRyk1uhi7zkbQ3slBdOA=
+github.com/cpuguy83/go-md2man v1.0.10 h1:BSKMNlYxDvnunlTymqtgONjNnaRV1sTpcovwwjF22jk=
+github.com/cpuguy83/go-md2man v1.0.10/go.mod h1:SmD6nW6nTyfqj6ABTjUi3V3JVMnlJmwcJI5acqYI6dE=
 github.com/google/uuid v1.0.0 h1:b4Gk+7WdP/d3HZH8EJsZpvV7EtDOgaZLtnaNGIu1adA=
 github.com/google/uuid v1.0.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/pborman/uuid v1.2.0 h1:J7Q5mO4ysT1dv8hyrUGHb9+ooztCXu1D8MY8DZYsu3g=
 github.com/pborman/uuid v1.2.0/go.mod h1:X/NO0urCmaxf9VXbdlT7C2Yzkj2IKimNn4k+gtPdI/k=
+github.com/russross/blackfriday v1.5.2 h1:HyvC0ARfnZBqnXwABFeSZHpKvJHJJfPz81GNueLj0oo=
+github.com/russross/blackfriday v1.5.2/go.mod h1:JO/DiYxRf+HjHt06OyowR9PTA263kcR/rfWxYHBV53g=
 github.com/savaki/go-giter8 v0.0.0-20141119011638-1651ec694ecc h1:sEcaMAXYLacLiKGq21ZSY5atdwCO1nQbLMmh4a3J1i8=
 github.com/savaki/go-giter8 v0.0.0-20141119011638-1651ec694ecc/go.mod h1:l42SBKJ2nBe8n/x4kh/QqqiYNdr/q2xcP0MuVHeKY6U=
 github.com/savaki/properties v0.0.0-20141107153340-7d87a9adc059 h1:KLj5K418bQnuG4QP9/BUBv7XL0BlxGB1nI9aspQOfNw=
@@ -12,3 +17,7 @@ github.com/savaki/properties v1.4.0 h1:1fuCeSn/NsvrmmEbdaoTr6D2v7MEH2BdtvlH84Hbo
 github.com/savaki/properties v1.4.0/go.mod h1:oDX/ZAm38lXr5kfIaGOorkdI9HsYa7/4lnNMzUdMhps=
 github.com/smartystreets/goconvey v0.0.0-20141105001104-5a2cd6136dd3 h1:eVDNqby71dJQVNqQDqsQkxUb7yVJtiF16+C7CHeJZts=
 github.com/smartystreets/goconvey v0.0.0-20141105001104-5a2cd6136dd3/go.mod h1:XDJAKZRPZ1CvBcN2aX5YOUTYGHki24fSF0Iv48Ibg0s=
+github.com/urfave/cli v1.22.0 h1:8nz/RUUotroXnOpYzT/Fy3sBp+2XEbXaY641/s3nbFI=
+github.com/urfave/cli v1.22.0/go.mod h1:b3D7uWrF2GilkNgYpgcg6J+JMUw7ehmNkE8sZdliGLc=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

@@ -10,7 +10,7 @@ Features & TODO:
 - [ ] Generate template output from local directory (protocol `file://`).
 - [ ] Support scaffolding.
 
-Latest version: [v0.2.0](RELEASE-NOTES.md).
+Latest version: [v0.2.0.1](RELEASE-NOTES.md).
 
 ## Installation
 
