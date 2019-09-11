@@ -25,16 +25,19 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/codegangsta/cli"
 	"github.com/btnguyen2k/go-giter8/template"
+	"github.com/codegangsta/cli"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 )
 
 var commandNew = cli.Command{
-	Name:  "new",
-	Usage: "create a new project",
+	Name:        "new",
+	ShortName:   "n",
+	Usage:       "Create a new project",
+	Description: "Create a new project from giter8 template located on GitHub, repository must be in format <username>/<repo-name-ends-with.g8>",
 	Flags: []cli.Flag{
 		flagGit,
 		flagVerbose,
@@ -42,6 +45,7 @@ var commandNew = cli.Command{
 	Action: newAction,
 }
 
+// handle command "new"
 func newAction(c *cli.Context) {
 	opts := Opts(c)
 
@@ -61,50 +65,75 @@ func newAction(c *cli.Context) {
 	err = newProject(opts.Repo, fields)
 	check(err)
 }
+func transformFilename(filename string, fields map[string]string) (string, error) {
+	result, err := template.Render([]byte(filename), fields)
+	if err != nil {
+		return "", err
+	}
+	return string(result), nil
+}
 
+// create new project from template
 func newProject(repo string, fields map[string]string) error {
+	delete(fields, "description") // remove system field "description"
+
 	target := template.Normalize(fields["name"])
 	if target == "" {
-		check(errors.New("no name parameter defined"))
+		check(errors.New("no [name] parameter defined"))
 	}
 
+	var verbatim []string
+	if val, ok := fields["verbatim"]; ok && val != "" {
+		verbatim = regexp.MustCompile("[,;:\\s]+").Split(fields["verbatim"], -1)
+	}
+	delete(fields, "verbatim") // remove system field "verbatim"
+
 	codebase := Path(repo, "src/main/g8")
-	prefix := len(codebase)
+	prefixLen := len(codebase)
 	return filepath.Walk(codebase, func(path string, f os.FileInfo, err error) error {
 		if f.IsDir() {
 			return nil
 		}
 
-		_, err = ioutil.ReadFile(path)
+		relative := path[prefixLen:] // path is absolute; let's strip off the prefix
+		// transform filename
+		destFileName, err := transformFilename(target+relative, fields)
 		if err != nil {
 			return err
 		}
-
-		relative := path[prefix:] // path is absolute; let's strip off the prefix
-		destBytes, err := template.Render([]byte(target+relative), fields)
-		if err != nil {
-			return err
-		}
-		dest := string(destBytes)
 
 		// ensure the directory exists
-		dirname := filepath.Dir(dest)
+		dirname := filepath.Dir(destFileName)
 		if !exists(dirname) {
 			fmt.Printf("creating directory, %s\n", dirname)
 			os.MkdirAll(dirname, 0755)
 		}
 
-		data, err := ioutil.ReadFile(path)
+		fmt.Printf("generating %s\n", destFileName)
+
+		// load file content
+		inContent, err := ioutil.ReadFile(path)
 		if err != nil {
 			return err
 		}
-
-		output, err := template.Render(data, fields)
-		if err != nil {
-			return err
+		outContent := inContent
+		// transform content if not in verbatim list
+		if !isVerbatim(f, verbatim) {
+			outContent, err = template.Render(inContent, fields)
+			if err != nil {
+				return err
+			}
 		}
-
-		fmt.Printf("writing %s\n", dest)
-		return ioutil.WriteFile(dest, output, f.Mode().Perm())
+		return ioutil.WriteFile(destFileName, outContent, f.Mode().Perm())
 	})
+}
+
+func isVerbatim(f os.FileInfo, verbatim []string) bool {
+	for _, v := range verbatim {
+		matched, _ := filepath.Match(v, f.Name())
+		if matched {
+			return true
+		}
+	}
+	return false
 }

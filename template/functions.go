@@ -30,27 +30,36 @@ import (
 )
 
 var funcMap = text_template.FuncMap{
-	"upper":           Upper,
-	"uppercase":       Upper,
-	"lower":           Lower,
-	"lowercase":       Lower,
-	"start":           Start,
-	"word":            Word,
-	"word-only":       Word,
-	"camel":           CamelLower,
-	"Camel":           Camel,
-	"cap":             Capitalize,
-	"capitalize":      Capitalize,
-	"hyphen":          Hyphenate,
-	"hyphenate":       Hyphenate,
-	"normalize":       Normalize,
-	"norm":            Normalize,
-	"snake":           Snake,
-	"snake-case":      Snake,
-	"packaged":        Packaged,
-	"packaged-case":   Packaged,
-	"random":          Random,
-	"generate-random": Random,
+	"upper":        Upper, // all uppercase letters
+	"uppercase":    Upper,
+	"lower":        Lower, // all lowercase letters
+	"lowercase":    Lower,
+	"cap":          Capitalize, // uppercase first letter
+	"capitalize":   Capitalize,
+	"decap":        Decapitalize, // lowercase first letter
+	"decapitalize": Decapitalize,
+	"start":        Start, // uppercase the first letter of each word
+	// "start-case":   Start,
+	"word": Word, // remove all non-word letters (only a-zA-Z0-9_)
+	// "word-only":    Word,
+	// "space":			Space,//replace all non-word letters (only a-zA-Z0-9) with a whitespace
+	// "word-space":		Space,
+	"Camel": Camel, // upper camel case (start-case, word-only)
+	// "upper-camel": Camel,
+	"camel": CamelLower, // lower camel case (start-case, word-only, decapitalize)
+	// "lower-camel": CamelLower,
+	"hyphen":    Hyphenate, // replace spaces with hyphens
+	"hyphenate": Hyphenate,
+	"norm":      Normalize, // all lowercase with hyphens (lowercase, hyphenate)
+	"normalize": Normalize,
+	"snake":     Snake, // replace spaces and dots with underscores
+	// "snake-case":  Snake,
+	// "package":         Package,//replace spaces with dots
+	// "package-naming":  Package,
+	"packaged": Packaged, // replace dots with slashes (net.databinder -> net/databinder)
+	// "packaged-dir":    Packaged,
+	"random": Random, // appends random characters to the given string
+	// "generate-random": Random,
 }
 
 var (
