@@ -7,6 +7,7 @@ It's implemented in Go and can produce output for any purpose.
 Features & TODO:
 - [x] Generate files and directories from templates published on [GitHub](https://github.com) repository.
 - [ ] Generate template output from any git repository.
+- [ ] Generate template output from local directory (protocol `file://`).
 - [ ] Support scaffolding.
 
 Latest version: [v0.2.0](RELEASE-NOTES.md).
