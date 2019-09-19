@@ -1,5 +1,13 @@
 # go-giter8 release notes
 
+## 2019-09-19 - v0.3.0
+
+- Generate template output from any git repository.
+- Remove temp directory after template output is generated successfully.
+- Generate template output from local directory (protocol `file://`).
+- Other fixes and improvements.
+
+
 ## 2019-09-11 - v0.2.0.1
 
 - Migrate to use package `github.com/urfave/cli`.

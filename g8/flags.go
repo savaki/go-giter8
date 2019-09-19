@@ -23,35 +23,33 @@
 package main
 
 import (
-    "github.com/urfave/cli"
+	"github.com/urfave/cli"
 )
 
 const (
-    fieldGit     = "git"
-    fieldVerbose = "verbose"
+	fieldGit     = "git"
+	fieldVerbose = "verbose"
 )
 
 var (
-    // flagGit     = cli.StringFlag{fieldGit, "/usr/bin/git", "path to the git binary", "GIT"}
-    // flagVerbose = cli.BoolFlag{fieldVerbose, "additional debugging", "VERBOSE"}
-    flagGit     = cli.StringFlag{Name: fieldGit, Value: "/usr/bin/git", Usage: "path to the git binary", EnvVar: "GIT"}
-    flagVerbose = cli.BoolFlag{Name: fieldVerbose, Usage: "additional debugging", EnvVar: "VERBOSE"}
+	flagGit     = cli.StringFlag{Name: fieldGit, Value: "/usr/bin/git", Usage: "relativePathToTemp to the git binary", EnvVar: "GIT"}
+	flagVerbose = cli.BoolFlag{Name: fieldVerbose, Usage: "additional debugging", EnvVar: "VERBOSE"}
 )
 
 var Verbose bool
 
 type Options struct {
-    Verbose bool
-    Git     string
-    Repo    string
+	Verbose bool
+	Git     string
+	Repo    string
 }
 
 func Opts(c *cli.Context) Options {
-    Verbose = c.Bool(fieldVerbose)
+	Verbose = c.Bool(fieldVerbose)
 
-    return Options{
-        Verbose: Verbose,
-        Git:     c.String(fieldGit),
-        Repo:    c.Args().First(),
-    }
+	return Options{
+		Verbose: Verbose,
+		Git:     c.String(fieldGit),
+		Repo:    c.Args().First(),
+	}
 }

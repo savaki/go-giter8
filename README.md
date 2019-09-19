@@ -5,12 +5,11 @@ which is a command line tool to generate files and directories from templates pu
 It's implemented in Go and can produce output for any purpose.
 
 Features & TODO:
-- [x] Generate files and directories from templates published on [GitHub](https://github.com) repository.
-- [ ] Generate template output from any git repository.
-- [ ] Generate template output from local directory (protocol `file://`).
+- [x] Generate template output from any git repository.
+- [x] Generate template output from local directory (protocol `file://`).
 - [ ] Support scaffolding.
 
-Latest version: [v0.2.0.1](RELEASE-NOTES.md).
+Latest version: [v0.3.0](RELEASE-NOTES.md).
 
 ## Installation
 
@@ -30,17 +29,29 @@ go get -u github.com/btnguyen2k/go-giter8/g8
 
 ## Usage
 
-Template repositories must reside in [GitHub](https://github.com) and be named with the suffix ```.g8```.  The syntax of `go-giter8` is slightly different from the original [giter8](https://github.com/n8han/giter8).
+Template repositories must reside in a git repository and be named with the suffix ```.g8```.  The syntax of `go-giter8` is slightly different from the original [giter8](https://github.com/n8han/giter8).
 
 ### New Project
 
-To create a new project from template, for example, [btnguyen2k/microservices-undertow-seed.g8](https://github.com/btnguyen2k/microservices-undertow-seed.g8):
+To create a new project from template, for example, [btnguyen2k/go_echo-microservices-seed.g8](https://github.com/btnguyen2k/go_echo-microservices-seed.g8):
 
 ```
-$ g8 new btnguyen2k/microservices-undertow-seed.g8
+$ g8 new btnguyen2k/go_echo-microservices-seed.g8
+```
+
+By default, template is cloned from [Github](https://github.com). Use full repo url to create project from template resided in other git server:
+
+```
+$ g8 new https://gitlab.com/btnguyen2k/go_echo-microservices-seed.g8
 ```
 
 `g8` uses your git binary underneath the hood so any settings you've applied to git will also be picked up by `g8`.
+
+`go-giter8` can also generate template output from local directory (useful when testing template before publishing):
+
+```
+$ g8 new file:///home/btnguyen2k/workspace/go_echo-microservices-seed.g8
+```
 
 # Formatting Template Fields
 
@@ -73,17 +84,16 @@ The formatting options are:
 Fields are defined in `src/main/g8/default.properties` file:
 
 ```
-description = This template generates a microservices project using Undertow framework.
-verbatim    = .DS_Store *.java .gitlab-ci.yml api.conf api_samples.conf *.xml release.sh
+description = This template generates a microservices project in Go using Echo framework.
+verbatim    = .DS_Store .gitlab-ci.yml release.sh
 
-name               = microservices-undertow-seed
-shortname          = mus
-desc               = Microservices project template using Undertow
-organization       = com.github.btnguyen2k
-app_author         = Thanh Nguyen <btnguyen2k@gmail.com>
-app_version        = 0.1.0
-scala_version      = 2.13.0
-timezone           = Asia/Ho_Chi_Minh
+name         = go_echo-microservices-seed
+shortname    = gems
+desc         = Microservices project template for Go using Echo
+organization = com.github.btnguyen2k
+app_author   = Thanh Nguyen <btnguyen2k@gmail.com>
+app_version  = 0.1.0
+timezone     = Asia/Ho_Chi_Minh
 ```
 
 Special fields:
