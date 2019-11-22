@@ -13,10 +13,16 @@ Latest version: [v0.3.0](RELEASE-NOTES.md).
 
 ## Installation
 
-You can install `go-giter8` using the standard go deployment tool. This will install g8 as ```$GOPATH/bin/g8```.
+You can install `go-giter8` using the standard go deployment tool. This will install g8 as ```$GOPATH/bin/g8```:
 
 ```
 go get github.com/btnguyen2k/go-giter8/g8
+```
+
+or you can specified a specific version:
+
+```
+go get github.com/btnguyen2k/go-giter8/g8@v0.3.0
 ```
 
 ## Upgrading 
@@ -25,6 +31,12 @@ At any point you can upgrade `g8` using the following:
 
 ```
 go get -u github.com/btnguyen2k/go-giter8/g8
+```
+
+or you can specified a specific version:
+
+```
+go get -u github.com/btnguyen2k/go-giter8/g8@v0.3.0
 ```
 
 ## Usage
