@@ -1,5 +1,10 @@
 # go-giter8 release notes
 
+## 2019-11-25 - v0.3.1
+
+- Fix bug: input with spaces is not treated as a whole string.
+
+
 ## 2019-09-19 - v0.3.0
 
 - Generate template output from any git repository.

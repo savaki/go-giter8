@@ -23,6 +23,7 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"github.com/btnguyen2k/go-giter8/git"
@@ -134,6 +135,7 @@ func readFields(repo *url.URL) (map[string]string, error) {
 
 	// ask the user for input on each of the fields
 	fields := map[string]string{}
+	scanner := bufio.NewScanner(os.Stdin)
 	for _, key := range p.Keys() {
 		if key == "" {
 			continue
@@ -143,7 +145,9 @@ func readFields(repo *url.URL) (map[string]string, error) {
 		if key != "verbatim" && key != "description" {
 			// do not ask for input for "system" fields
 			fmt.Printf("%s [%s]: ", key, defaultValue)
-			fmt.Scanln(&value)
+			if scanner.Scan() {
+				value = scanner.Text()
+			}
 		}
 		if strings.TrimSpace(value) == "" {
 			fields[key] = defaultValue

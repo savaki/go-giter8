@@ -9,7 +9,7 @@ Features & TODO:
 - [x] Generate template output from local directory (protocol `file://`).
 - [ ] Support scaffolding.
 
-Latest version: [v0.3.0](RELEASE-NOTES.md).
+Latest version: [v0.3.1](RELEASE-NOTES.md).
 
 ## Installation
 
@@ -22,7 +22,7 @@ go get github.com/btnguyen2k/go-giter8/g8
 or you can specified a specific version:
 
 ```
-go get github.com/btnguyen2k/go-giter8/g8@v0.3.0
+go get github.com/btnguyen2k/go-giter8/g8@v0.3.1
 ```
 
 ## Upgrading 
@@ -36,7 +36,7 @@ go get -u github.com/btnguyen2k/go-giter8/g8
 or you can specified a specific version:
 
 ```
-go get -u github.com/btnguyen2k/go-giter8/g8@v0.3.0
+go get -u github.com/btnguyen2k/go-giter8/g8@v0.3.1
 ```
 
 ## Usage
