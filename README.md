@@ -9,7 +9,7 @@ Features & TODO:
 - [x] Generate template output from local directory (protocol `file://`).
 - [ ] Support scaffolding.
 
-Latest version: [v0.3.1](RELEASE-NOTES.md).
+Latest version: [v0.3.2](RELEASE-NOTES.md).
 
 ## Installation
 
@@ -22,7 +22,7 @@ go get github.com/btnguyen2k/go-giter8/g8
 or you can specified a specific version:
 
 ```
-go get github.com/btnguyen2k/go-giter8/g8@v0.3.1
+go get github.com/btnguyen2k/go-giter8/g8@v0.3.2
 ```
 
 ## Upgrading 
@@ -36,7 +36,7 @@ go get -u github.com/btnguyen2k/go-giter8/g8
 or you can specified a specific version:
 
 ```
-go get -u github.com/btnguyen2k/go-giter8/g8@v0.3.1
+go get -u github.com/btnguyen2k/go-giter8/g8@v0.3.2
 ```
 
 ## Usage
@@ -93,11 +93,11 @@ The formatting options are:
     packaged |                 : replace dots with slashes (net.databinder -> net/databinder)
     random   |                 : appends random characters to the given string
 
-Fields are defined in `src/main/g8/default.properties` file:
+Fields are defined in `src/main/g8/default.properties` file. Sample:
 
 ```
-description = This template generates a microservices project in Go using Echo framework.
-verbatim    = .DS_Store .gitlab-ci.yml release.sh
+description  = This template generates a microservices project in Go using Echo framework.
+verbatim     = .DS_Store .gitignore .gitlab-ci.yml go.mod go.sum release.sh public/* vendor/* views/*
 
 name         = go_echo-microservices-seed
 shortname    = gems
@@ -110,8 +110,12 @@ timezone     = Asia/Ho_Chi_Minh
 
 Special fields:
 - `description`: description of the template. It will be excluded from substitution list.
-- `verbatim`:  list of file patterns (separated by space, comma, semi-colon or colon) such as `*.gif,*.png *.ico`. Files matching verbatim pattern are excluded from string template processing. `verbatim` field will be excluded from substitution list.
+- `verbatim`: list of file patterns (separated by space, comma, semi-colon or colon) such as `*.gif,*.png *.ico`. Files matching verbatim pattern are excluded from string template processing. `verbatim` field will be excluded from substitution list.
 - `name`: it is used as the name of a project being created. `go-giter8` creates a project directory based off that name (normalized) that will contain the template output.
+
+
+> It is recommended that name follows the format `[a-zA-Z0-9]+` (only numbers and character).
+> Use `camelCase` to separate words (not underscores!).
 
 ## Giter8 template
 

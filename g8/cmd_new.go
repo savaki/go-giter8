@@ -26,12 +26,14 @@ import (
 	"errors"
 	"fmt"
 	"github.com/btnguyen2k/go-giter8/template"
+	"github.com/gobwas/glob"
 	"github.com/urfave/cli"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 var commandNew = cli.Command{
@@ -115,9 +117,9 @@ func newProject(repo *url.URL, fields map[string]string) error {
 			return nil
 		}
 
-		relative := path[prefixLen:] // relativePathToTemp is absolute; let's strip off the prefix
+		relativePath := path[prefixLen:] // relativePathToTemp is absolute; let's strip off the prefix
 		// transform filename
-		destFileName, err := transformFilename(target+relative, fields)
+		destFileName, err := transformFilename(target+relativePath, fields)
 		if err != nil {
 			return err
 		}
@@ -137,8 +139,9 @@ func newProject(repo *url.URL, fields map[string]string) error {
 			return err
 		}
 		outContent := inContent
-		// transform content if not in verbatim list
-		if !isVerbatim(f, verbatim) {
+
+		// transform content if not in "verbatim" list
+		if !isFileMatched(relativePath, f, verbatim) {
 			outContent, err = template.Render(inContent, fields)
 			if err != nil {
 				return err
@@ -148,10 +151,13 @@ func newProject(repo *url.URL, fields map[string]string) error {
 	})
 }
 
-func isVerbatim(f os.FileInfo, verbatim []string) bool {
-	for _, v := range verbatim {
-		matched, _ := filepath.Match(v, f.Name())
-		if matched {
+func isFileMatched(relativePath string, f os.FileInfo, matchList []string) bool {
+	relativePath = strings.TrimPrefix(relativePath, "/")
+	for _, pattern := range matchList {
+		if matched, _ := filepath.Match(pattern, f.Name()); matched {
+			return true
+		}
+		if g := glob.MustCompile(pattern); g != nil && g.Match(relativePath) {
 			return true
 		}
 	}

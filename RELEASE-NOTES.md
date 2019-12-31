@@ -1,6 +1,11 @@
 # go-giter8 release notes
 
-## 2019-11-25 - v0.3.1
+## 2019-12-30 - v0.3.2
+
+- Enhance "verbatim" list: support files under specific directories.
+
+
+## 2019-11-25 - vc
 
 - Fix bug: input with spaces is not treated as a whole string.
 

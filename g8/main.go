@@ -37,7 +37,7 @@ import (
 
 const (
 	// Version of go-giter8
-	Version = "0.3.1"
+	Version = "0.3.2"
 )
 
 func main() {
@@ -143,7 +143,7 @@ func readFields(repo *url.URL) (map[string]string, error) {
 		defaultValue := p.GetString(key, "")
 		var value string
 		if key != "verbatim" && key != "description" {
-			// do not ask for input for "system" fields
+			// do not ask for input for 'system' fields
 			fmt.Printf("%s [%s]: ", key, defaultValue)
 			if scanner.Scan() {
 				value = scanner.Text()
