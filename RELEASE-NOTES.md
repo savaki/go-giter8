@@ -10,7 +10,7 @@
 - Enhance "verbatim" list: support files under specific directories.
 
 
-## 2019-11-25 - vc
+## 2019-11-25 - v0.3.1
 
 - Fix bug: input with spaces is not treated as a whole string.
 
