@@ -1,5 +1,10 @@
 # go-giter8 release notes
 
+## 2020-01-01 - v0.4.0
+
+- Support scaffolding & `scaffold` command.
+
+
 ## 2019-12-30 - v0.3.2
 
 - Enhance "verbatim" list: support files under specific directories.

@@ -26,14 +26,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/btnguyen2k/go-giter8/template"
-	"github.com/gobwas/glob"
 	"github.com/urfave/cli"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 )
 
 var commandNew = cli.Command{
@@ -53,41 +51,33 @@ func newAction(c *cli.Context) {
 	opts := Opts(c)
 
 	if opts.Repo == "" {
-		fmt.Println("ERROR - no template repo specified")
+		exitIfError(errors.New("ERROR - no template repo specified"))
 	}
 
 	// extract the repo
 	repo, err := url.Parse(opts.Repo)
-	check(err)
+	exitIfError(err)
 	if repo.Scheme == "" {
 		repo.Scheme = "https"
 	}
 	if repo.Host == "" && repo.Scheme != "file" {
 		repo.Host = "github.com" // template are fetched from github by default
 	}
-	err = exportRepo(opts.Git, repo)
-	check(err)
+	err = exportGitRepo(opts.Git, repo)
+	exitIfError(err)
 
 	// prompt the user to override the default properties
-	fields, err := readFields(repo)
-	check(err)
+	fields, err := readFieldsFromGitRepo(repo)
+	exitIfError(err)
 
 	// render the contents
 	err = newProject(repo, fields)
-	check(err)
+	exitIfError(err)
 
 	if repo.Scheme != "file" {
 		err = cleanDir(relativePathToTemp(userAndRepoNames(repo)))
-		check(err)
+		exitIfError(err)
 	}
-}
-
-func transformFilename(filename string, fields map[string]string) (string, error) {
-	result, err := template.Render([]byte(filename), fields)
-	if err != nil {
-		return "", err
-	}
-	return string(result), nil
 }
 
 // create new project from template
@@ -96,7 +86,7 @@ func newProject(repo *url.URL, fields map[string]string) error {
 
 	target := template.Normalize(fields["name"])
 	if target == "" {
-		check(errors.New("no [name] parameter defined"))
+		exitIfError(errors.New("no [name] parameter defined"))
 	}
 
 	var verbatim []string
@@ -105,14 +95,27 @@ func newProject(repo *url.URL, fields map[string]string) error {
 	}
 	delete(fields, "verbatim") // remove system field "verbatim"
 
-	var codebase string
+	var codeBase, scaffoldsBase string
 	if repo.Scheme == "file" {
-		codebase = repo.Path + "/src/main/g8"
+		codeBase = repo.Path + "/src/main/g8"
+		scaffoldsBase = repo.Path + "/src/main/scaffolds"
 	} else {
-		codebase = relativePathToTemp(userAndRepoNames(repo), "src/main/g8")
+		codeBase = relativePathToTemp(userAndRepoNames(repo), "src/main/g8")
+		scaffoldsBase = relativePathToTemp(userAndRepoNames(repo), "src/main/scaffolds")
 	}
-	prefixLen := len(codebase)
-	return filepath.Walk(codebase, func(path string, f os.FileInfo, err error) error {
+
+	// copy scaffolds
+	if pathExists(scaffoldsBase) {
+		fmt.Println("Copying scaffolds...")
+		if err := copyDir(scaffoldsBase, target+"/.g8"); err != nil {
+			return err
+		}
+	}
+
+	// create project structure from template
+	fmt.Println("Generating project...")
+	prefixLen := len(codeBase)
+	return filepath.Walk(codeBase, func(path string, f os.FileInfo, err error) error {
 		if f.IsDir() || f.Name() == "default.properties" {
 			return nil
 		}
@@ -123,15 +126,12 @@ func newProject(repo *url.URL, fields map[string]string) error {
 		if err != nil {
 			return err
 		}
-
 		// ensure the directory exists
-		dirname := filepath.Dir(destFileName)
-		if !exists(dirname) {
-			fmt.Printf("creating directory, %s\n", dirname)
-			os.MkdirAll(dirname, 0755)
+		if err = mkdir(filepath.Dir(destFileName), 0755); err != nil {
+			return err
 		}
 
-		fmt.Printf("generating %s\n", destFileName)
+		fmt.Println("\tgenerating", destFileName)
 
 		// load file content
 		inContent, err := ioutil.ReadFile(path)
@@ -147,19 +147,6 @@ func newProject(repo *url.URL, fields map[string]string) error {
 				return err
 			}
 		}
-		return ioutil.WriteFile(destFileName, outContent, f.Mode().Perm())
+		return ioutil.WriteFile(destFileName, outContent, f.Mode())
 	})
-}
-
-func isFileMatched(relativePath string, f os.FileInfo, matchList []string) bool {
-	relativePath = strings.TrimPrefix(relativePath, "/")
-	for _, pattern := range matchList {
-		if matched, _ := filepath.Match(pattern, f.Name()); matched {
-			return true
-		}
-		if g := glob.MustCompile(pattern); g != nil && g.Match(relativePath) {
-			return true
-		}
-	}
-	return false
 }

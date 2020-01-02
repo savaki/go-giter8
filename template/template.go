@@ -31,7 +31,7 @@ import (
 
 var (
 	// $name__filter1__filter2$
-	shortFormat = regexp.MustCompile(`\$([a-zA-Z0-9]+(__[a-zA-Z0-9]+)*)\$`)
+	shortFormat = regexp.MustCompile(`\$(([a-zA-Z0-9](_[a-zA-Z0-9]+)*)+(__[a-zA-Z0-9]+)*)\$`)
 
 	// $name;format="filter1,filter2"$
 	longFormat = regexp.MustCompile(`\$((\w+);format="([^"]+)")\$`)
