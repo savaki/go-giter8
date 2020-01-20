@@ -121,11 +121,15 @@ func newProject(repo *url.URL, fields map[string]string) error {
 		}
 
 		relativePath := path[prefixLen:] // relativePathToTemp is absolute; let's strip off the prefix
-		// transform filename
-		destFileName, err := transformFilename(target+relativePath, fields)
-		if err != nil {
-			return err
+		var destFileName = target + relativePath
+		// transform filename if not in "verbatim" list
+		if !isFileMatched(relativePath, f, verbatim) {
+			destFileName, err = transformFilename(destFileName, fields)
+			if err != nil {
+				return err
+			}
 		}
+
 		// ensure the directory exists
 		if err = mkdir(filepath.Dir(destFileName), 0755); err != nil {
 			return err

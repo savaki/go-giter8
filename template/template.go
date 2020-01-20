@@ -41,7 +41,9 @@ var (
 func Parse(text []byte) (*text_template.Template, error) {
 	text = transform(text)
 
-	return text_template.New("template").Funcs(funcMap).Parse(string(text))
+	leftDelim := "{\000{{\000{{{\000{{{{"
+	rightDelim := "}}}}\000}}}\000}}\000}"
+	return text_template.New("template").Funcs(funcMap).Delims(leftDelim, rightDelim).Parse(string(text))
 }
 
 func Render(text []byte, data interface{}) ([]byte, error) {

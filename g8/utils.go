@@ -9,7 +9,6 @@ import (
 	"github.com/gobwas/glob"
 	"github.com/savaki/properties"
 	"io/ioutil"
-	"log"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -19,7 +18,8 @@ import (
 // exitIfError terminates application in case of error
 func exitIfError(err error) {
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
+		// log.Fatalln(err)
 	}
 }
 
