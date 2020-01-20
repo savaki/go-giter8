@@ -29,7 +29,7 @@ import (
 
 const (
 	// Version of go-giter8
-	Version = "0.4.1.1"
+	Version = "0.4.2"
 )
 
 func main() {
