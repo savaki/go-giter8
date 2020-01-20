@@ -1,9 +1,10 @@
 # go-giter8 release notes
 
-## 2020-01-20 - v0.4.1
+## 2020-01-20 - v0.4.1.1
 
 - Fix: filename of file in "verbatim" list is kept intact.
 - Fix: `text/template`'s default delims (`{{` and `}}`) may cause issue sometimes.
+- Other bug fixes.
 
 
 ## 2020-01-01 - v0.4.0
