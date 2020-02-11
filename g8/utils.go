@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -187,8 +188,19 @@ func copyDir(srcDir, destDir string) error {
 }
 
 func isFileMatched(relativePath string, f os.FileInfo, matchList []string) bool {
-	relativePath = strings.TrimPrefix(relativePath, "/")
+	isWindows := strings.ToLower(runtime.GOOS) == "windows"
+	if isWindows {
+		relativePath = strings.TrimPrefix(relativePath, "\\")
+	} else {
+		relativePath = strings.TrimPrefix(relativePath, "/")
+	}
+
 	for _, pattern := range matchList {
+		if isWindows {
+			pattern = strings.ReplaceAll(pattern, "/", "\\\\")
+		} else {
+			pattern = strings.ReplaceAll(pattern, "\\", "/")
+		}
 		if matched, _ := filepath.Match(pattern, f.Name()); matched {
 			return true
 		}

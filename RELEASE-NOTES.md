@@ -1,5 +1,10 @@
 # go-giter8 release notes
 
+## 2020-21-10 - v0.4.3
+
+- Fix: incorrect file matching on Windows.
+
+
 ## 2020-01-20 - v0.4.2
 
 - Fix: filename of file in "verbatim" list is kept intact.
