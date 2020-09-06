@@ -13,18 +13,18 @@ Latest version: [v0.5.0](RELEASE-NOTES.md).
 
 ## Installation
 
-> `go-giter8` is go-module enabled. Therefore, it must be installed/upgraded in go-module mode.
+> `go-giter8` is go-module enabled. Therefore, it must be installed/upgraded in go-module mode by setting `GO111MODULE=on`.
 
 You can install `go-giter8` using the standard go deployment tool. This will install g8 as ```$GOPATH/bin/g8```:
 
 ```
-GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8
+export GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8
 ```
 
 or you can specified a specific version:
 
 ```
-GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8@v0.5.0
+export GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8@v0.5.0
 ```
 
 ### Upgrading 
@@ -32,16 +32,14 @@ GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8@v0.5.0
 At any point you can upgrade `g8` using the following:
 
 ```
-GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8
+export GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8
 ```
 
 or you can specified a specific version:
 
 ```
-GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8@v0.5.0
+export GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8@v0.5.0
 ```
-
-> GO111MODULE mode must be turned on in order to install/update `go-giter8`.
 
 ## Giter8 template
 
