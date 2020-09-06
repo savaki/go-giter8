@@ -25,13 +25,16 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/btnguyen2k/go-giter8/template"
-	"github.com/urfave/cli"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
+
+	"github.com/urfave/cli"
+
+	"github.com/btnguyen2k/go-giter8/template"
 )
 
 var commandNew = cli.Command{
@@ -41,6 +44,7 @@ var commandNew = cli.Command{
 	Description: "Create a new project from giter8 template located on GitHub, repository must be in format <username>/<repo-name-ends-with.g8>",
 	Flags: []cli.Flag{
 		flagGit,
+		flagQuiet,
 		flagVerbose,
 	},
 	Action: newAction,
@@ -49,11 +53,9 @@ var commandNew = cli.Command{
 // handle command "new"
 func newAction(c *cli.Context) {
 	opts := Opts(c)
-
-	if opts.Repo == "" {
+	if strings.TrimSpace(opts.Repo) == "" {
 		exitIfError(errors.New("ERROR - no template repo specified"))
 	}
-
 	// extract the repo
 	repo, err := url.Parse(opts.Repo)
 	exitIfError(err)
@@ -63,30 +65,28 @@ func newAction(c *cli.Context) {
 	if repo.Host == "" && repo.Scheme != "file" {
 		repo.Host = "github.com" // template are fetched from github by default
 	}
-	err = exportGitRepo(opts.Git, repo)
-	exitIfError(err)
+	repo.Path = strings.TrimSuffix(repo.Path, "/")
+	exitIfError(exportGitRepo(opts, repo))
 
-	// prompt the user to override the default properties
-	fields, err := readFieldsFromGitRepo(repo)
+	// load parameters
+	fields, err := readFieldsFromG8Template(opts, repo)
 	exitIfError(err)
 
 	// render the contents
-	err = newProject(repo, fields)
-	exitIfError(err)
+	exitIfError(newProject(opts, repo, fields))
 
 	if repo.Scheme != "file" {
-		err = cleanDir(relativePathToTemp(userAndRepoNames(repo)))
-		exitIfError(err)
+		exitIfError(cleanDir(relativePathToTemp(userAndRepoNames(repo))))
 	}
 }
 
 // create new project from template
-func newProject(repo *url.URL, fields map[string]string) error {
+func newProject(opts *Options, repo *url.URL, fields map[string]string) error {
 	delete(fields, "description") // remove system field "description"
 
 	target := template.Normalize(fields["name"])
 	if target == "" {
-		exitIfError(errors.New("no [name] parameter defined"))
+		return errors.New("no [name] parameter defined")
 	}
 
 	var verbatim []string
@@ -106,16 +106,25 @@ func newProject(repo *url.URL, fields map[string]string) error {
 
 	// copy scaffolds
 	if pathExists(scaffoldsBase) {
-		fmt.Println("Copying scaffolds...")
-		if err := copyDir(scaffoldsBase, target+"/.g8"); err != nil {
+		fmt.Printf("Copying scaffolds...")
+		if opts.Verbose {
+			fmt.Println()
+		}
+		if err := copyDir(opts, scaffoldsBase, target+"/.g8"); err != nil {
 			return err
+		}
+		if !opts.Verbose {
+			fmt.Printf("done.\n")
 		}
 	}
 
 	// create project structure from template
-	fmt.Println("Generating project...")
+	fmt.Printf("Generating project...")
+	if opts.Verbose {
+		fmt.Println()
+	}
 	prefixLen := len(codeBase)
-	return filepath.Walk(codeBase, func(path string, f os.FileInfo, err error) error {
+	err := filepath.Walk(codeBase, func(path string, f os.FileInfo, err error) error {
 		if f.IsDir() || f.Name() == "default.properties" {
 			return nil
 		}
@@ -135,11 +144,15 @@ func newProject(repo *url.URL, fields map[string]string) error {
 			return err
 		}
 
-		fmt.Println("\tgenerating", destFileName)
-
+		if opts.Verbose {
+			fmt.Printf("\tgenerating %s...", destFileName)
+		}
 		// load file content
 		inContent, err := ioutil.ReadFile(path)
 		if err != nil {
+			if opts.Verbose {
+				fmt.Printf("error.\n")
+			}
 			return err
 		}
 		outContent := inContent
@@ -148,9 +161,28 @@ func newProject(repo *url.URL, fields map[string]string) error {
 		if !isFileMatched(relativePath, f, verbatim) {
 			outContent, err = template.Render(inContent, fields)
 			if err != nil {
+				if opts.Verbose {
+					fmt.Printf("error.\n")
+				}
 				return err
 			}
 		}
-		return ioutil.WriteFile(destFileName, outContent, f.Mode())
+		err = ioutil.WriteFile(destFileName, outContent, f.Mode())
+		if opts.Verbose {
+			if err != nil {
+				fmt.Printf("error.\n")
+			} else {
+				fmt.Printf("done.\n")
+			}
+		}
+		return err
 	})
+	if !opts.Verbose {
+		if err != nil {
+			fmt.Printf("error.\n")
+		} else {
+			fmt.Printf("done.\n")
+		}
+	}
+	return err
 }

@@ -9,34 +9,36 @@ Features:
 - [x] Generate template output from local directory (protocol `file://`).
 - [x] Support scaffolding.
 
-Latest version: [v0.4.3](RELEASE-NOTES.md).
+Latest version: [v0.5.0](RELEASE-NOTES.md).
 
 ## Installation
+
+> `go-giter8` is go-module enabled. Therefore, it must be installed/upgraded in go-module mode.
 
 You can install `go-giter8` using the standard go deployment tool. This will install g8 as ```$GOPATH/bin/g8```:
 
 ```
-go get github.com/btnguyen2k/go-giter8/g8
+GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8
 ```
 
 or you can specified a specific version:
 
 ```
-go get github.com/btnguyen2k/go-giter8/g8@v0.4.3
+GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8@v0.5.0
 ```
 
-## Upgrading 
+### Upgrading 
 
 At any point you can upgrade `g8` using the following:
 
 ```
-go get -u github.com/btnguyen2k/go-giter8/g8
+GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8
 ```
 
 or you can specified a specific version:
 
 ```
-go get -u github.com/btnguyen2k/go-giter8/g8@v0.4.3
+GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8@v0.5.0
 ```
 
 > GO111MODULE mode must be turned on in order to install/update `go-giter8`.
@@ -67,20 +69,20 @@ Summary of a Giter8 template project structure:
 
 ## Usage
 
-Template repositories must reside in a git repository and be named with the suffix ```.g8```.  The syntax of `go-giter8` is slightly different from the original [giter8](https://github.com/n8han/giter8).
+Template repositories must reside in a git repository and be named with the suffix `.g8`.  The syntax of `go-giter8` is slightly different from the original [giter8](https://github.com/n8han/giter8).
 
 ### New Project
 
-To create a new project from template, for example, [btnguyen2k/goapi.g8](https://github.com/btnguyen2k/goapi.g8):
+To create a new project from a template, for example, [btnguyen2k/go-giter8-sample.g8](https://github.com/btnguyen2k/go-giter8-sample.g8):
 
 ```
-$ g8 new btnguyen2k/api.g8
+$ g8 new btnguyen2k/go-giter8-sample.g8
 ```
 
-By default, template is cloned from [Github](https://github.com). Use full repo url to create project from template resided in other git server:
+By default, the template is cloned from [Github](https://github.com). Use full repo url to create project from a template resided in other git server:
 
 ```
-$ g8 new https://gitlab.com/btnguyen2k/goapi.g8
+$ g8 new https://gitlab.com/btnguyen2k/go-giter8-sample.g8
 ```
 
 `go-giter8` uses your git binary underneath the hood so any settings you've applied to git will also be picked up by `g8`.
@@ -88,7 +90,7 @@ $ g8 new https://gitlab.com/btnguyen2k/goapi.g8
 `go-giter8` can also generate template output from local directory (useful when testing template before publishing):
 
 ```
-$ g8 new file:///home/btnguyen2k/workspace/goapi.g8
+$ g8 new file:///home/btnguyen2k/workspace/go-giter8-sample.g8
 ```
 
 > Files & directories under `/src/main/g8/` are used to generate project.

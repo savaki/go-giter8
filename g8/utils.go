@@ -4,16 +4,18 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/btnguyen2k/go-giter8/git"
-	"github.com/btnguyen2k/go-giter8/template"
-	"github.com/gobwas/glob"
-	"github.com/savaki/properties"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/gobwas/glob"
+	"github.com/savaki/properties"
+
+	"github.com/btnguyen2k/go-giter8/git"
+	"github.com/btnguyen2k/go-giter8/template"
 )
 
 // exitIfError terminates application in case of error
@@ -52,11 +54,12 @@ func cleanDir(tempDir string) error {
 // - gitBinary: git's executable binary file
 // - repo: format [<https://host:port/>]<username>/repo-name-ends-with.g8>, example https://github.com/btnguyen2k/go_echo-microservices-seed.g8
 //     if <https://host:port/> is not provided, https://github.com/ is assumed
-func exportGitRepo(gitBinary string, repo *url.URL) error {
+func exportGitRepo(opts *Options, repo *url.URL) error {
 	if repo.Scheme == "file" {
 		return nil
 	}
 
+	gitBinary := opts.Git
 	userAndRepoNames := userAndRepoNames(repo)
 	dirOut := relativePathToTemp(userAndRepoNames)
 	err := cleanDir(dirOut)
@@ -71,11 +74,11 @@ func exportGitRepo(gitBinary string, repo *url.URL) error {
 
 	user := tokens[0]
 	client := git.New(gitBinary, relativePathToTemp(user))
-	client.Verbose = Verbose
+	client.Verbose = opts.Verbose
 	return client.Export(repo)
 }
 
-// userAndRepoNames extract the <username/repo-name> part from repository url
+// userAndRepoNames extracts the <username/repo-name> part from repository url
 func userAndRepoNames(url *url.URL) string {
 	userAndRepoNames := url.Path
 	if strings.HasPrefix(userAndRepoNames, "/") {
@@ -90,18 +93,33 @@ func relativePathToTemp(dirs ...string) string {
 	return fmt.Sprintf("%s/.go-giter8/%s", os.Getenv("HOME"), subdir)
 }
 
-// readFieldsFromFile reads fields/values from file ("..properties" format)
-func readFieldsFromFile(path string) (map[string]string, error) {
+// readFieldsFromFile reads fields/values from file (".properties" format)
+func readFieldsFromFile(opts *Options, path string) (map[string]string, error) {
+	if opts.Verbose {
+		fmt.Printf("Loading parameters from file %s...", path)
+	}
 	props, err := properties.LoadFile(path, properties.UTF8)
 	if err != nil {
+		if opts.Verbose {
+			fmt.Printf("error.\n")
+		}
 		return map[string]string{}, nil
+	}
+	if opts.Verbose {
+		fmt.Printf("done.\n")
 	}
 
 	// print out "description" if any
 	if desc := props.GetString("description", ""); desc != "" {
-		fmt.Println(desc)
+		fmt.Printf("\t%s\n", desc)
 	}
 
+	fmt.Printf("Customizing parameters: ")
+	if opts.NoInputs {
+		fmt.Printf("skipped.\n")
+	} else {
+		fmt.Printf("\n")
+	}
 	// ask the user for input on each of the fields
 	fields := map[string]string{}
 	scanner := bufio.NewScanner(os.Stdin)
@@ -111,9 +129,9 @@ func readFieldsFromFile(path string) (map[string]string, error) {
 		}
 		defaultValue := props.GetString(key, "")
 		var value string
-		if key != "verbatim" && key != "description" {
+		if key != "verbatim" && key != "description" && !opts.NoInputs {
 			// do not ask for input for 'system' fields
-			fmt.Printf("%s [%s]: ", key, defaultValue)
+			fmt.Printf("\t%s [%s]: ", key, defaultValue)
 			if scanner.Scan() {
 				value = scanner.Text()
 			}
@@ -124,12 +142,11 @@ func readFieldsFromFile(path string) (map[string]string, error) {
 			fields[key] = value
 		}
 	}
-
 	return fields, nil
 }
 
-// readFieldsFromGitRepo reads fields/values from "default.properties" resided in a git repo
-func readFieldsFromGitRepo(repo *url.URL) (map[string]string, error) {
+// readFieldsFromG8Template reads fields/values from "default.properties" resided in a "giter8" template
+func readFieldsFromG8Template(opts *Options, repo *url.URL) (map[string]string, error) {
 	var path string
 	// assume giter8 format
 	if repo.Scheme == "file" {
@@ -137,7 +154,7 @@ func readFieldsFromGitRepo(repo *url.URL) (map[string]string, error) {
 	} else {
 		path = relativePathToTemp(userAndRepoNames(repo), "src/main/g8/default.properties")
 	}
-	return readFieldsFromFile(path)
+	return readFieldsFromFile(opts, path)
 }
 
 func transformFilename(filename string, fields map[string]string) (string, error) {
@@ -155,12 +172,14 @@ func mkdir(target string, mode os.FileMode) error {
 	return nil
 }
 
-func copyDir(srcDir, destDir string) error {
+func copyDir(opts *Options, srcDir, destDir string) error {
 	prefixLen := len(srcDir)
 	return filepath.Walk(srcDir, func(path string, f os.FileInfo, err error) error {
 		relativePath := path[prefixLen:]
 		dest := destDir + relativePath
-		fmt.Println("\tcopying", path, "->", dest)
+		if opts.Verbose {
+			fmt.Printf("\tCopying %s -> %s\n", path, dest)
+		}
 		switch f.Mode() & os.ModeType {
 		case os.ModeDir:
 			return mkdir(dest, f.Mode())
