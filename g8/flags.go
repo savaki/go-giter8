@@ -27,29 +27,32 @@ import (
 )
 
 const (
-	fieldGit     = "git"
-	fieldVerbose = "verbose"
+	fieldGit      = "git"
+	fieldNoInputs = "no-inputs"
+	fieldVerbose  = "verbose"
 )
 
 var (
 	flagGit     = cli.StringFlag{Name: fieldGit, Value: "/usr/bin/git", Usage: "relativePathToTemp to the git binary", EnvVar: "GIT"}
-	flagVerbose = cli.BoolFlag{Name: fieldVerbose, Usage: "additional debugging", EnvVar: "VERBOSE"}
+	flagQuiet   = cli.BoolFlag{Name: fieldNoInputs, Usage: "accept all default values, do not ask for input"}
+	flagVerbose = cli.BoolFlag{Name: fieldVerbose, Usage: "additional debugging"}
 )
 
-var Verbose bool
+// var Verbose bool
 
 type Options struct {
+	NoInputs     bool
 	Verbose      bool
 	Git          string
 	Repo         string
 	ScaffoldName string
 }
 
-func Opts(c *cli.Context) Options {
-	Verbose = c.Bool(fieldVerbose)
-
-	return Options{
-		Verbose:      Verbose,
+func Opts(c *cli.Context) *Options {
+	// Verbose = c.Bool(fieldVerbose)
+	return &Options{
+		NoInputs:     c.Bool(fieldNoInputs),
+		Verbose:      c.Bool(fieldVerbose),
 		Git:          c.String(fieldGit),
 		Repo:         c.Args().First(),
 		ScaffoldName: c.Args().First(),

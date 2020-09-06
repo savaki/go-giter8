@@ -1,6 +1,12 @@
 # go-giter8 release notes
 
-## 2020-21-10 - v0.4.3
+## 2020-09-07 - v0.5.0
+
+- AB#24: Support "quiet" mode.
+- Other fixes and enhancements.
+
+
+## 2020-02-10 - v0.4.3
 
 - Fix: incorrect file matching on Windows.
 

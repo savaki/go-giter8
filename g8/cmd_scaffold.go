@@ -3,12 +3,15 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/btnguyen2k/go-giter8/template"
-	"github.com/urfave/cli"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
+
+	"github.com/urfave/cli"
+
+	"github.com/btnguyen2k/go-giter8/template"
 )
 
 var commandScaffold = cli.Command{
@@ -25,15 +28,14 @@ var commandScaffold = cli.Command{
 
 // handle command "scaffold"
 func scaffoldAction(c *cli.Context) {
-	opts := Opts(c)
-	if opts.ScaffoldName == "" {
-		exitIfError(errors.New("ERROR - no scaffold name specified"))
-	}
-	err := generateScaffold(opts.ScaffoldName)
-	exitIfError(err)
+	exitIfError(generateScaffold(Opts(c)))
 }
 
-func generateScaffold(scaffoldName string) error {
+func generateScaffold(opts *Options) error {
+	scaffoldName := strings.TrimSpace(opts.ScaffoldName)
+	if scaffoldName == "" {
+		return errors.New("ERROR - no scaffold name specified")
+	}
 	srcDir := ".g8/" + scaffoldName
 	if !isDir(srcDir) {
 		return errors.New("ERROR - [" + srcDir + "] not readable, or not a directory")
@@ -42,7 +44,7 @@ func generateScaffold(scaffoldName string) error {
 	destDir := "."
 
 	// prompt the user to override the default properties
-	fields, err := readFieldsFromFile(srcDir + "/default.properties")
+	fields, err := readFieldsFromFile(opts, srcDir+"/default.properties")
 	exitIfError(err)
 
 	delete(fields, "description") // remove system field "description"
