@@ -9,7 +9,7 @@ Features:
 - [x] Generate template output from local directory (protocol `file://`).
 - [x] Support scaffolding.
 
-Latest version: [v0.5.0](RELEASE-NOTES.md).
+Latest version: [v0.5.1](RELEASE-NOTES.md).
 
 ## Installation
 
@@ -24,7 +24,7 @@ export GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8
 or you can specified a specific version:
 
 ```
-export GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8@v0.5.0
+export GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8@v0.5.1
 ```
 
 ### Upgrading 
@@ -38,7 +38,7 @@ export GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8
 or you can specified a specific version:
 
 ```
-export GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8@v0.5.0
+export GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8@v0.5.1
 ```
 
 ## Giter8 template

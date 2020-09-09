@@ -19,10 +19,10 @@ var commandScaffold = cli.Command{
 	ShortName:   "sf",
 	Usage:       "Generate files from a scaffolding",
 	Description: "Generate files from a giter8 scaffold",
-	// Flags: []cli.Flag{
-	// 	flagGit,
-	// 	flagVerbose,
-	// },
+	Flags: []cli.Flag{
+		flagNoInputs,
+		flagVerbose,
+	},
 	Action: scaffoldAction,
 }
 
@@ -43,7 +43,7 @@ func generateScaffold(opts *Options) error {
 	// must stand at project's root directory
 	destDir := "."
 
-	// prompt the user to override the default properties
+	// load parameters
 	fields, err := readFieldsFromFile(opts, srcDir+"/default.properties")
 	exitIfError(err)
 
@@ -54,9 +54,13 @@ func generateScaffold(opts *Options) error {
 	}
 	delete(fields, "verbatim") // remove system field "verbatim"
 
-	fmt.Println("Generating scaffold " + scaffoldName + "...")
+	// generate scaffold
+	fmt.Printf("Generating scaffold %s...", scaffoldName)
+	if opts.Verbose {
+		fmt.Println()
+	}
 	prefixLen := len(srcDir)
-	return filepath.Walk(srcDir, func(path string, f os.FileInfo, err error) error {
+	err = filepath.Walk(srcDir, func(path string, f os.FileInfo, err error) error {
 		if f.IsDir() || f.Name() == "default.properties" {
 			return nil
 		}
@@ -71,11 +75,15 @@ func generateScaffold(opts *Options) error {
 			return err
 		}
 
-		fmt.Println("\tgenerating", destFileName)
-
+		if opts.Verbose {
+			fmt.Printf("\tgenerating %s...", destFileName)
+		}
 		// load file content
 		inContent, err := ioutil.ReadFile(path)
 		if err != nil {
+			if opts.Verbose {
+				fmt.Printf("error.\n")
+			}
 			return err
 		}
 		outContent := inContent
@@ -84,9 +92,28 @@ func generateScaffold(opts *Options) error {
 		if !isFileMatched(relativePath, f, verbatim) {
 			outContent, err = template.Render(inContent, fields)
 			if err != nil {
+				if opts.Verbose {
+					fmt.Printf("error.\n")
+				}
 				return err
 			}
 		}
-		return ioutil.WriteFile(destFileName, outContent, f.Mode())
+		err = ioutil.WriteFile(destFileName, outContent, f.Mode())
+		if opts.Verbose {
+			if err != nil {
+				fmt.Printf("error.\n")
+			} else {
+				fmt.Printf("done.\n")
+			}
+		}
+		return err
 	})
+	if !opts.Verbose {
+		if err != nil {
+			fmt.Printf("error.\n")
+		} else {
+			fmt.Printf("done.\n")
+		}
+	}
+	return err
 }

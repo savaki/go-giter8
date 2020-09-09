@@ -44,7 +44,7 @@ var commandNew = cli.Command{
 	Description: "Create a new project from giter8 template located on GitHub, repository must be in format <username>/<repo-name-ends-with.g8>",
 	Flags: []cli.Flag{
 		flagGit,
-		flagQuiet,
+		flagNoInputs,
 		flagVerbose,
 	},
 	Action: newAction,
