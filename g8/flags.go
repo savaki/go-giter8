@@ -33,9 +33,9 @@ const (
 )
 
 var (
-	flagGit     = cli.StringFlag{Name: fieldGit, Value: "/usr/bin/git", Usage: "relativePathToTemp to the git binary", EnvVar: "GIT"}
-	flagQuiet   = cli.BoolFlag{Name: fieldNoInputs, Usage: "accept all default values, do not ask for input"}
-	flagVerbose = cli.BoolFlag{Name: fieldVerbose, Usage: "additional debugging"}
+	flagGit      = cli.StringFlag{Name: fieldGit, Value: "/usr/bin/git", Usage: "relativePathToTemp to the git binary", EnvVar: "GIT"}
+	flagNoInputs = cli.BoolFlag{Name: fieldNoInputs, Usage: "do not ask for input, accept all default values from default.properties"}
+	flagVerbose  = cli.BoolFlag{Name: fieldVerbose, Usage: "additional debugging"}
 )
 
 // var Verbose bool

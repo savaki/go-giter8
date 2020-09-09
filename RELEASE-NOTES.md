@@ -1,5 +1,10 @@
 # go-giter8 release notes
 
+## 2020-09-09 - v0.5.1
+
+- AB#24: `scaffold` command supports "quiet" mode.
+
+
 ## 2020-09-07 - v0.5.0
 
 - AB#24: Support "quiet" mode.
