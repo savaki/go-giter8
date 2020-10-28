@@ -52,10 +52,12 @@ func cleanDir(tempDir string) error {
 
 // exportGitRepo exports a git repo to local directory
 // - gitBinary: git's executable binary file
-// - repo: format [<https://host:port/>]<username>/repo-name-ends-with.g8>, example https://github.com/btnguyen2k/go_echo-microservices-seed.g8
+// - repo: format [<https://host:port/>]<username>/repo-name-ends-with.g8>[@branchOrTagName],
+//     example https://github.com/btnguyen2k/go_echo-microservices-seed.g8@template-v0.4.r1
 //     if <https://host:port/> is not provided, https://github.com/ is assumed
 func exportGitRepo(opts *Options, repo *url.URL) error {
 	if repo.Scheme == "file" {
+		// @branch or @tag is not supported with local files
 		return nil
 	}
 
@@ -75,16 +77,30 @@ func exportGitRepo(opts *Options, repo *url.URL) error {
 	user := tokens[0]
 	client := git.New(gitBinary, relativePathToTemp(user))
 	client.Verbose = opts.Verbose
-	return client.Export(repo)
+	return client.Clone(repo.String(), tagOrBranchName(repo))
+	// return client.Export(repo, tagOrBranchName(repo))
 }
 
 // userAndRepoNames extracts the <username/repo-name> part from repository url
 func userAndRepoNames(url *url.URL) string {
 	userAndRepoNames := url.Path
+	if i := strings.LastIndex(userAndRepoNames, "@"); i >= 0 {
+		userAndRepoNames = userAndRepoNames[0:i]
+	}
 	if strings.HasPrefix(userAndRepoNames, "/") {
 		userAndRepoNames = userAndRepoNames[1:]
 	}
 	return userAndRepoNames
+}
+
+// tagOrBranchName extract the tag/branch name part from repository url.
+// tagOrBranchName is suffixed to the repository url after @ character.
+func tagOrBranchName(url *url.URL) string {
+	tagOrBranchName := ""
+	if i := strings.LastIndex(url.Path, "@"); i >= 0 {
+		tagOrBranchName = url.Path[i+1:]
+	}
+	return tagOrBranchName
 }
 
 // relativePathToTemp creates relative path to our temporary storage location

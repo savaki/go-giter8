@@ -1,5 +1,10 @@
 # go-giter8 release notes
 
+## 2020-10-28 - v0.6.0
+
+- AB#30: Support creating project from templates located at specific git branches or tags.
+
+
 ## 2020-09-09 - v0.5.1
 
 - AB#24: `scaffold` command supports "quiet" mode.
