@@ -24,26 +24,33 @@ package git
 
 import (
 	"log"
-	"net/url"
 	"os"
 	"os/exec"
+	"strings"
 )
 
-func (g *Git) Clone(url string) error {
+func (g *Git) Clone(url, tagOrBranchName string) error {
+	if i := strings.LastIndex(url, "@"); i >= 0 {
+		url = url[0:i]
+	}
+	args := []string{"clone", url}
+	if tagOrBranchName != "" {
+		args = append(append(args, "--branch"), tagOrBranchName)
+	}
 	if g.Verbose {
-		log.Printf("git clone %s\n", url)
+		log.Printf("git %s\n", strings.Join(args, " "))
 	}
 	if _, err := os.Stat(g.TargetDir); os.IsNotExist(err) {
 		os.MkdirAll(g.TargetDir, 0755)
 	}
 
-	cmd := exec.Command(g.GitBinary, "clone", url)
+	cmd := exec.Command(g.GitBinary, args...)
 	cmd.Dir = g.TargetDir
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
 }
 
-func (g *Git) Export(repo *url.URL) error {
-	return g.Clone(repo.String() + ".git")
-}
+// func (g *Git) Export(repo *url.URL) error {
+// 	return g.Clone(repo.String() + ".git")
+// }
