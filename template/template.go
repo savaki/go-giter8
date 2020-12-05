@@ -31,17 +31,22 @@ import (
 
 var (
 	// $name__filter1__filter2$
-	shortFormat = regexp.MustCompile(`\$([a-zA-Z0-9]+(__[a-zA-Z0-9]+)*)\$`)
+	shortFormat = regexp.MustCompile(`\$(([a-zA-Z0-9](_[a-zA-Z0-9]+)*)+(__[a-zA-Z0-9]+)*)\$`)
 
 	// $name;format="filter1,filter2"$
 	longFormat = regexp.MustCompile(`\$((\w+);format="([^"]+)")\$`)
+)
+
+const (
+	leftDelim  = "{\000{"
+	rightDelim = "}\000}"
 )
 
 // converts data on the other end of the reader to a golang template
 func Parse(text []byte) (*text_template.Template, error) {
 	text = transform(text)
 
-	return text_template.New("template").Funcs(funcMap).Parse(string(text))
+	return text_template.New("template").Funcs(funcMap).Delims(leftDelim, rightDelim).Parse(string(text))
 }
 
 func Render(text []byte, data interface{}) ([]byte, error) {
@@ -65,7 +70,8 @@ func transformShort(text []byte) []byte {
 	matches := shortFormat.FindAllSubmatch(results, -1)
 	for _, match := range matches {
 		segments := bytes.Split(match[1], []byte("__"))
-		macro := fmt.Sprintf("{{ .%s }}", bytes.Join(segments, []byte(" | ")))
+		// macro := fmt.Sprintf("{{ .%s }}", bytes.Join(segments, []byte(" | ")))
+		macro := fmt.Sprintf(leftDelim+" .%s "+rightDelim, bytes.Join(segments, []byte(" | ")))
 		results = bytes.Replace(results, match[0], []byte(macro), -1)
 	}
 
@@ -83,7 +89,8 @@ func transformLong(text []byte) []byte {
 		segments := [][]byte{field}
 		segments = append(segments, bytes.Split(filters, []byte(","))...)
 
-		macro := fmt.Sprintf("{{ .%s }}", bytes.Join(segments, []byte(" | ")))
+		// macro := fmt.Sprintf("{{ .%s }}", bytes.Join(segments, []byte(" | ")))
+		macro := fmt.Sprintf(leftDelim+" .%s "+rightDelim, bytes.Join(segments, []byte(" | ")))
 		results = bytes.Replace(results, match[0], []byte(macro), -1)
 	}
 

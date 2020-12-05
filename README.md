@@ -1,77 +1,193 @@
-go-giter8
-=========
+# go-giter8
 
-go-giter8 is a command line tool based on n8han/giter8 to generate files and directories from templates published on any git repository.  It's implemented in Go and can produce output for any purpose.
+`btnguyen2k/go-giter8` is a fork of [`savaki/go-giter8`](https://github.com/savaki/go-giter8),
+which is a command line tool to generate files and directories from templates published on git repository.
+It's implemented in Go and can produce output for any purpose.
 
-The motivation came after noticing the complexity of modifying the original giter8 codebase.  The additional features provided by go-giter8 are:
+Features:
+- [x] Generate template output from any git repository.
+- [x] Generate template outout from a specific git branch or tag.
+- [x] Generate template output from local directory (protocol `file://`).
+- [x] Support scaffolding.
 
-* go-giter8 shells out to the real git binary for git access rather than simulating it via libraries
-* multiple filters are now supported for directories
+Latest version: [v0.6.0](RELEASE-NOTES.md).
 
-# Installation
+## Installation
 
-You can install go-giter8 using the standard go deployment tool.  This will install g8 as ```$GOPATH/bin/g8```.
+> `go-giter8` is go-module enabled. Therefore, it must be installed/upgraded in go-module mode by setting `GO111MODULE=on`.
 
-```
-go get github.com/savaki/go-giter8/g8
-```
-
-***Future*** - need to set up brew install
-
-# Upgrading 
-
-At any point you can upgrade g8 using the following:
+You can install `go-giter8` using the standard go deployment tool. This will install g8 as ```$GOPATH/bin/g8```:
 
 ```
-go get -u github.com/savaki/go-giter8/g8
+export GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8
 ```
 
-# Usage
-
-Template repositories must reside in git and be named with the suffix ```.g8```.  The syntax of go-giter8 is slightly different from the original giter8.
-
-## New Project
-
-To create a new project from template, for example, [loyal3/service-template-finatra.g8](https://github.com/loyal3/service-template-finatra.g8):
+or you can specified a specific version:
 
 ```
-$ g8 new loyal3/service-template-finatra
+export GO111MODULE=on && go get github.com/btnguyen2k/go-giter8/g8@v0.6.0
 ```
 
-The ```.g8``` suffix is assumed.  You can also specify a full repository name:
+### Upgrading 
+
+At any point you can upgrade `g8` using the following:
 
 ```
-$ g8 git@github.com:loyal3/service-template-finatra.g8.git
+export GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8
 ```
+
+or you can specified a specific version:
+
+```
+export GO111MODULE=on && go get -u github.com/btnguyen2k/go-giter8/g8@v0.6.0
+```
+
+## Giter8 template
+
+For information on Giter8 templates, please see [http://www.foundweekends.org/giter8/](http://www.foundweekends.org/giter8/).
+
+Summary of a Giter8 template project structure:
+
+```
+<root>/
+└── src/main/
+    ├── g8/
+    │   └── <template source files & directories>
+    └── scaffolds/
+        ├── <name1>/
+        │   ├── default.properties
+        │   └── <source files & directories of scaffold 1>
+        ├── <name2>/
+        │   ├── default.properties
+        │   └── <source files & directories of scaffold 2>
+        │   ...
+        └── <nameN>/
+            ├── default.properties
+            └── <source files & directories of scaffold N>
+```
+
+## Usage
+
+A template must reside in a git repository and be named with the suffix `.g8`. The syntax of `go-giter8` is slightly different from the original [giter8](https://github.com/n8han/giter8).
+
+Sample template: [btnguyen2k/go-giter8-sample.g8](https://github.com/btnguyen2k/go-giter8-sample.g8).
+
+### New Project
+
+To create a new project from a template, for example, [btnguyen2k/go-giter8-sample.g8](https://github.com/btnguyen2k/go-giter8-sample.g8):
+
+```
+$ g8 new btnguyen2k/go-giter8-sample.g8
+```
+
+A specific `branch` or `tag` can be use with syntax `@tagOrBranchName`:
+
+```
+$ g8 new btnguyen2k/go-giter8-sample.g8@branchName
 
 or
 
+$ g8 new btnguyen2k/go-giter8-sample.g8@tagName
 ```
-$ g8 https://github.com/loyal3/service-template-finatra.g8.git
+
+By default, the template is cloned from [Github](https://github.com). Use full repo url to create project from a template resided in other git server:
+
+```
+$ g8 new https://gitlab.com/btnguyen2k/go-giter8-sample.g8
+
+or
+
+$ g8 new https://gitlab.com/btnguyen2k/go-giter8-sample.g8@branchName
+
+or
+
+$ g8 new https://gitlab.com/btnguyen2k/go-giter8-sample.g8@tagName
 ```
 
-g8 uses your git binary underneath the hood so any settings you've applied to git will also be picked up by g8.
+`go-giter8` uses your git binary (from default location `/usr/bin/git`) underneath the hood so any settings you've applied to git will also be picked up by `g8`.
+If git binary is not installed at the default location, specify the git binary with `--git /path/to/git`.
 
-# Formatting Template Fields
+`go-giter8` can also generate template output from local directory (useful when testing template before publishing):
 
-go-giter8 has built-in support for formatting template fields. Formatting options can be added when referencing fields. For example, the name field can be formatted in upper camel case with:
+```
+$ g8 new file:///home/btnguyen2k/workspace/go-giter8-sample.g8
+```
+
+> Files & directories under `/src/main/g8/` are used to generate project.
+
+> Scaffolds under `/src/main/scaffolds/` are copied to `.g8/` under project's target directory.
+
+Template placeholders and substitutions are defined in `default.properties` file. See section [Formatting Template Fields](#formatting_template_fields) below.
+
+### Scaffolding
+
+Scaffolds can be generated by standing at generated project's root directory and run the following command:
+
+```
+$ g8 scaffold <scafold-name>
+```
+
+For example:
+
+```
+$ g8 scaffold bodao_mysql
+```
+
+> Scaffold placeholders and substitutions are defined in `default.properties` files. See section [Formatting Template Fields](#formatting_template_fields) below.
+
+Scaffolding is available since [v0.4.0](RELEASE-NOTES.md).
+
+## Formatting Template Fields
+
+`go-giter8` has built-in support for formatting template fields. Formatting options can be added when referencing fields. For example, the name field can be formatted in upper camel case with:
 
 ```
 $name;format="Camel"$
 ```
 
+If `name` field has value `myName`, the above formatting will transform to `MyName`.
+
 The formatting options are:
 
+    FuncName | Alternative Name
+    ---------|--------------------------------------------------------------------------------
     upper    | uppercase       : all uppercase letters
     lower    | lowercase       : all lowercase letters
     cap      | capitalize      : uppercase first letter
     decap    | decapitalize    : lowercase first letter
-    start    | start-case      : uppercase the first letter of each word
-    word     | word-only       : remove all non-word letters (only a-zA-Z0-9_)
-    Camel    | upper-camel     : upper camel case (start-case, word-only)
-    camel    | lower-camel     : lower camel case (start-case, word-only, decapitalize)
+    start    |                 : uppercase the first letter of each word
+    word     |                 : remove all non-word letters (only a-zA-Z0-9_)
+    Camel    |                 : upper camel case (start-case, word-only)
+    camel    |                 : lower camel case (start-case, word-only, decapitalize)
     hyphen   | hyphenate       : replace spaces with hyphens
     norm     | normalize       : all lowercase with hyphens (lowercase, hyphenate)
-    snake    | snake-case      : replace spaces and dots with underscores
-    packaged | package-dir     : replace dots with slashes (net.databinder -> net/databinder)
-    random   | generate-random : appends random characters to the given string
+    snake    |                 : replace spaces and dots with underscores
+    packaged |                 : replace dots with slashes (net.databinder -> net/databinder)
+    random   |                 : appends random characters to the given string
+
+> Project level fields are defined in `/src/main/g8/default.properties` file.
+
+> Scaffold level fields are defined in `/src/main/scaffolds/<scaffold-name>/default.properties` file.
+
+Sample of `default.properties`:
+
+```
+description  = This template generates a microservices project in Go using Echo framework.
+verbatim     = .DS_Store .gitignore .gitlab-ci.yml go.mod go.sum release.sh public/* vendor/* views/*
+
+name         = go_echo-microservices-seed
+shortname    = gems
+desc         = Microservices project template for Go using Echo
+organization = com.github.btnguyen2k
+app_author   = Thanh Nguyen <btnguyen2k@gmail.com>
+app_version  = 0.1.0
+timezone     = Asia/Ho_Chi_Minh
+```
+
+Special fields:
+- `description`: description of the template. It will be excluded from substitution list.
+- `verbatim`: list of file patterns (separated by space, comma, semi-colon or colon) such as `*.gif,*.png *.ico`. Files matching verbatim pattern are excluded from string template processing. `verbatim` field will be excluded from substitution list.
+- `name`: it is used as the name of a project being created. `go-giter8` creates a project directory based off that name (normalized) that will contain the template output.
+
+> It is recommended that name follows the format `[a-zA-Z0-9]+` (only numbers and character).
+> Use `camelCase` to separate words (not underscores!).

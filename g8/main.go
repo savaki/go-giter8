@@ -23,80 +23,23 @@
 package main
 
 import (
-	"fmt"
-	"github.com/codegangsta/cli"
-	"github.com/savaki/go-giter8/git"
-	"github.com/savaki/properties"
-	"log"
+	"github.com/urfave/cli"
 	"os"
-	"strings"
+)
+
+const (
+	// Version of go-giter8
+	Version = "0.6.0"
 )
 
 func main() {
 	app := cli.NewApp()
 	app.Name = "giter8"
-	app.Usage = "generate templates using github"
-	app.Version = "0.1"
+	app.Usage = "Generate templates from GitHub"
+	app.Version = Version
 	app.Commands = []cli.Command{
 		commandNew,
+		commandScaffold,
 	}
 	app.Run(os.Args)
-}
-
-func check(err error) {
-	if err != nil {
-		log.Fatalln(err)
-	}
-}
-
-// helper to determine if path exists
-func exists(path string) bool {
-	_, err := os.Stat(path)
-
-	return !os.IsNotExist(err)
-}
-
-// ExportRepo(git, loyal3/service-template-finatra.g8) => nil
-func exportRepo(gitpath, repo string) error {
-	if exists(Path(repo)) {
-		return nil
-	}
-
-	user := strings.Split(repo, "/")[0]
-	client := git.New(gitpath, Path(user))
-	client.Verbose = Verbose
-	return client.Export(repo)
-}
-
-// path relative to our temporary storage location
-func Path(dirs ...string) string {
-	subdir := strings.Join(dirs, "/")
-	return fmt.Sprintf("%s/.go-giter8/%s", os.Getenv("HOME"), subdir)
-}
-
-func readFields(repo string) (map[string]string, error) {
-	// assume giter8 format
-	path := Path(repo, "src/main/g8/default.properties")
-	p, err := properties.LoadFile(path, properties.UTF8)
-	if err != nil {
-		return map[string]string{}, nil
-	}
-
-	// ask the user for input on each of the fields
-	fields := map[string]string{}
-	for _, key := range p.Keys() {
-		defaultValue := p.GetString(key, "")
-		fmt.Printf("%s [%s]: ", key, defaultValue)
-
-		var value string
-		fmt.Scanln(&value)
-
-		if strings.TrimSpace(value) == "" {
-			fields[key] = defaultValue
-		} else {
-			fields[key] = value
-		}
-	}
-
-	return fields, nil
 }

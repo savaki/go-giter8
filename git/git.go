@@ -23,14 +23,14 @@
 package git
 
 type Git struct {
-	Git     string
-	Target  string
-	Verbose bool
+	GitBinary string
+	TargetDir string
+	Verbose   bool
 }
 
-func New(git, target string) *Git {
+func New(gitBinary, targetDir string) *Git {
 	return &Git{
-		Git:    git,
-		Target: target,
+		GitBinary: gitBinary,
+		TargetDir: targetDir,
 	}
 }
